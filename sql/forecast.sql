@@ -1,4 +1,4 @@
--- Tablespace Forecast from AWR
+-- Tablespace Forecast from AWR (Compatible >= 12.1)
 COL "Size MB" FORMAT 99,999,999.99
 COL "Used MB" FORMAT 99,999,999.99
 COL "Used %" FORMAT 99,999,999.99
@@ -23,8 +23,12 @@ WITH rl AS (
     snap.SNAP_ID = tbsstat.SNAP_ID
     AND tbsstat.SNAP_ID = usage.SNAP_ID
     AND tbsstat.TS# = usage.TABLESPACE_ID
-	AND usage.TABLESPACE_ID = tbsstat.TS#
-	AND snap.END_INTERVAL_TIME > sysdate-&history_days
+    ---------- Comment these lines to use the query in <= 11.2 ----------
+    AND usage.CON_ID = tbsstat.CON_ID
+    AND usage.TABLESPACE_ID = tbsstat.TS#
+    AND usage.CON_ID = SYS_CONTEXT('USERENV','CON_ID')
+    -------------------- End of 12c specifics ---------------------------
+    AND snap.END_INTERVAL_TIME > sysdate-&history_days
   GROUP BY 
     UPPER(tbsstat.TSNAME),
 	BLOCK_SIZE
