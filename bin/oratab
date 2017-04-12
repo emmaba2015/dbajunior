@@ -1,0 +1,1 @@
+PROMPT_COMMAND='printf "\033]0;%s [%s]\007" "${HOSTNAME%%.*}" `echo $ORACLE_SID`'
