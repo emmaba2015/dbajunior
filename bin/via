@@ -1,7 +1,0 @@
-alertlog=$(sqlplus -s / as sysdba << EOF
-set pages 0 lines 120
-col name format a20
-col value format a80
-select value from v\$diag_info where name='Diag Trace';
-EOF)
-vi -R ${alertlog}/alert_${ORACLE_SID}.log
